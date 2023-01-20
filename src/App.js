@@ -1,10 +1,11 @@
 import './App.css';
 
 function App() {
+  const title ="Anusha's world"
   return (
     <div className="App">
      <div className="Container">
-      <h1>Hello react world</h1>
+      <h1>{title}</h1>
      </div>
     </div>
   );
