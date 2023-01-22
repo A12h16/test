@@ -1,31 +1,27 @@
-import { useState, useEffect} from "react";
-import BlogList  from "./BlogList"
+import { useState, useEffect } from "react";
+import BlogList from "./BlogList"
 
 const HomePage = () => {
-    const [blogs, setBlogs] = useState([
-        { title: 'My new website', body: 'lorem ipsum...', author: 'mario', id: 1 },
-        { title: 'Welcome party!', body: 'lorem ipsum...', author: 'yoshi', id: 2 },
-        { title: 'Web dev top tips', body: 'lorem ipsum...', author: 'mario', id: 3 }
-    ])
+    const [blogs, setBlogs] = useState(null)
 
-    const [name,setName]=useState('mario')
+    const [name, setName] = useState('mario')
 
-const handelDelete=(id)=>{
- const newBlog= blogs.filter(blog =>blog.id!==id)
- setBlogs(newBlog)
-}
+     useEffect(() => {
+        console.log("useEffect here")
+        fetch(" http://localhost:8000/blogs")
+            .then(res => {      //promise
+                return res.json();
+            })
+            .then(data=>{ //another promise to take data from other response
+                console.log(data)
+                setBlogs(data)
+            })
+    }, [])
 
-useEffect(()=>{
-    console.log("useEffect here")
-    console.log(name)
-},[name])
-
-
+//{} used arround js // conditional templating in react//firts evaluates left then right on if left is true
     return (
         <div className="home">
-          <BlogList blogs={blogs} title="All Blogs" handelDelete={handelDelete}/>  
-        <button onClick={()=>setName("Anusha Devaiah")}>Change Name</button>
-        <p>{name}</p>
+            {blogs && <BlogList blogs={blogs} title="All Blogs" />} 
         </div>
     );
 }
