@@ -1,7 +1,8 @@
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+
 import './index';
 import HomePage from './Home';
 import Navbar from './Navbar';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Create from './Create';
 import BlogsDetails from './BlogsDetails';
 

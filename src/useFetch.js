@@ -1,40 +1,45 @@
-import { useState, useEffect } from "react";
-
+import { useState, useEffect } from 'react';
 
 const useFetch = (url) => {
-    const [data, setData] = useState(null)
-    const [isPending, setIsPending] = useState(true);
-    const [error, setError] = useState(true);
+    console.log("url",url)
+  const [data, setData] = useState(null);
+  const [isPending, setIsPending] = useState(true);
+  const [error, setError] = useState(null);
 
-    useEffect(() => {
-        const abortCont =new AbortController();
-        setTimeout(() => {
-            fetch(url,{signal:abortCont.signal})
-                .then(res => {      //promise
-                    if (!res.ok) {
-                        throw Error('Could not fech the data for the resourse')
-                    }
-                    return res.json();
-                })
-                .then(data => { //another promise to take data from other response
-                    setData(data)
-                    setIsPending(false)// shows loading before fetching data.once data feched assigned to false
-                    setError(null)
-                })
-                .catch(error => {
-                    if(error.name==="AbortError"){
-                        console.log("fetch abborted")
-                    }
-                    else{
-                    setError(error.message)
-                    setIsPending(false)
-                    }
-                })
-        }, 1000)
+  useEffect(() => {
+    const abortCont = new AbortController();
 
-        return ()=>abortCont.abort();
-    }, [url])
-    return {data,isPending,error}//object
+    setTimeout(() => {
+      fetch(url, { signal: abortCont.signal })
+      .then(res => {
+        console.log("res")
+        if (!res.ok) { // error coming back from server
+          throw Error('could not fetch the data for that resource');
+        } 
+        return res.json();
+      })
+      .then(data => {
+        setIsPending(false);
+        setData(data);
+        setError(null);
+        console.log("data",data)
+      })
+      .catch(err => {
+        if (err.name === 'AbortError') {
+          console.log('fetch aborted')
+        } else {
+          // auto catches network / connection error
+          setIsPending(false);
+          setError(err.message);
+        }
+      })
+    }, 1000);
+
+    // abort the fetch
+    return () => abortCont.abort();
+  }, [url])
+
+  return { data, isPending, error };
 }
-
-export default useFetch
+ 
+export default useFetch;
